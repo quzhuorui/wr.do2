@@ -766,6 +766,8 @@
     "Publicize this storage bucket, all registered users can upload files to this storage bucket; If not public, only administrators can upload files to this storage bucket": "公开此存储桶，所有注册用户都可以上传文件到此存储桶; 若不公开，只有管理员可以上传文件到此存储桶",
     "Provider": "提供渠道",
     "How to get the S3 credentials?": "如何获取 S3 授权配置？",
+    "Attachment R2 Domain": "附件 R2 域名",
+    "Set the R2 domain for email attachments, e.g., https://r2.example.com": "设置邮件附件的 R2 域名，例如：https://r2.example.com",
     "Provider Unique Name": "渠道名称",
     "Unique": "唯一",
     "Add Provider": "添加渠道",

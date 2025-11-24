@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import {
   getMultipleConfigs,
   updateSystemConfig,
+  setSystemConfig,
 } from "@/lib/dto/system-config";
 import { checkUserStatus } from "@/lib/dto/user";
 import { getCurrentUser } from "@/lib/session";
@@ -60,13 +61,9 @@ export async function POST(req: NextRequest) {
       return Response.json("key and value is required", { status: 400 });
     }
 
-    const configs = await getMultipleConfigs([key]);
-
-    if (key in configs) {
-      await updateSystemConfig(key, { value, type });
-      return Response.json("Success", { status: 200 });
-    }
-    return Response.json("Invalid key", { status: 400 });
+    // Use setSystemConfig for upsert operation (create if not exists, update if exists)
+    await setSystemConfig(key, value, type);
+    return Response.json("Success", { status: 200 });
   } catch (error) {
     console.error("[Error]", error);
     return Response.json(error.message || "Server error", { status: 500 });

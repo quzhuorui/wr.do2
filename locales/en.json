@@ -766,6 +766,8 @@
     "Publicize this storage bucket, all registered users can upload files to this storage bucket; If not public, only administrators can upload files to this storage bucket": "Publicize this storage bucket, all registered users can upload files to this storage bucket; If not public, only administrators can upload files to this storage bucket",
     "Provider": "Provider",
     "How to get the S3 credentials?": "How to get the S3 credentials?",
+    "Attachment R2 Domain": "Attachment R2 Domain",
+    "Set the R2 domain for email attachments, e.g., https://r2.example.com": "Set the R2 domain for email attachments, e.g., https://r2.example.com",
     "Provider Unique Name": "Provider Unique Name",
     "Unique": "Unique",
     "Add Provider": "Add Provider",
