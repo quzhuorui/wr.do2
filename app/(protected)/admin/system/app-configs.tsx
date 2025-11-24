@@ -42,6 +42,7 @@ export default function AppConfigs({}: {}) {
   const [tgChatId, setTgChatId] = useState("");
   const [tgTemplate, setTgTemplate] = useState("");
   const [tgWhiteList, setTgWhiteList] = useState("");
+  const [emailR2Domain, setEmailR2Domain] = useState("");
 
   const t = useTranslations("Setting");
 
@@ -56,6 +57,7 @@ export default function AppConfigs({}: {}) {
       setTgWhiteList(configs?.tg_email_target_white_list);
       setForwardEmailTargets(configs?.email_forward_targets);
       setForwardEmailWhiteList(configs?.email_forward_white_list);
+      setEmailR2Domain(configs?.email_r2_domain);
     }
 
     if (!isLoading) {
@@ -800,6 +802,39 @@ export default function AppConfigs({}: {}) {
                 </div>
               </CollapsibleContent>
             </Collapsible>
+
+            {/* Email R2 Domain */}
+            <div className="flex flex-col items-start justify-start gap-3">
+              <div className="space-y-1 leading-none">
+                <p className="font-medium">{t("Attachment R2 Domain")}</p>
+                <p className="text-xs text-muted-foreground">
+                  {t(
+                    "Set the R2 domain for email attachments, e.g., https://r2.example.com",
+                  )}
+                </p>
+              </div>
+              {configs && (
+                <div className="flex w-full items-start gap-2">
+                  <Input
+                    className="bg-white dark:bg-neutral-700"
+                    placeholder="https://r2.example.com"
+                    value={emailR2Domain}
+                    onChange={(e) => setEmailR2Domain(e.target.value)}
+                  />
+                  <Button
+                    className="h-9 text-nowrap"
+                    disabled={
+                      isPending || emailR2Domain === configs.email_r2_domain
+                    }
+                    onClick={() =>
+                      handleChange(emailR2Domain, "email_r2_domain", "STRING")
+                    }
+                  >
+                    {t("Save")}
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </CollapsibleContent>
       </Collapsible>

@@ -8,6 +8,7 @@ const allowed_keys = [
   "enable_user_registration",
   "enable_subdomain_apply",
   "system_notification",
+  "email_r2_domain",
 ];
 
 export async function GET(req: NextRequest) {

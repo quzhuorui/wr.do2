@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ForwardEmail } from "@prisma/client";
 import {
   File,
@@ -12,9 +12,10 @@ import {
   FileVideo,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import useSWR from "swr";
 
 import { siteConfig } from "@/config/site";
-import { cn, downloadFile, formatDate, formatFileSize } from "@/lib/utils";
+import { cn, downloadFile, formatDate, formatFileSize, fetcher } from "@/lib/utils";
 import { Icons } from "@/components/shared/icons";
 
 import { BlurImg } from "../shared/blur-image";
@@ -87,7 +88,24 @@ export default function EmailDetail({
   onMarkAsRead,
 }: EmailDetailProps) {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [emailR2Domain, setEmailR2Domain] = useState<string>("");
   const t = useTranslations("Email");
+
+  // Fetch email R2 domain configuration
+  const { data: configData } = useSWR<Record<string, any>>(
+    "/api/configs?key=email_r2_domain",
+    fetcher,
+    { dedupingInterval: 60000 },
+  );
+
+  useEffect(() => {
+    if (configData?.email_r2_domain) {
+      setEmailR2Domain(configData.email_r2_domain);
+    } else if (siteConfig.emailR2Domain) {
+      // Fallback to environment variable if config not set
+      setEmailR2Domain(siteConfig.emailR2Domain);
+    }
+  }, [configData]);
 
   function getFileIcon(type: string): React.ComponentType<any> {
     const icon = Object.keys(fileTypeIcons).find((key) =>
@@ -98,11 +116,11 @@ export default function EmailDetail({
 
   const handleDownload = async (attachment: Attachment) => {
     downloadFile(
-      `${siteConfig.emailR2Domain}/${attachment.r2Path}`,
+      `${emailR2Domain}/${attachment.r2Path}`,
       attachment.filename,
     );
     // downloadFileFromUrl(
-    //   `${siteConfig.emailR2Domain}/${attachment.r2Path}`,
+    //   `${emailR2Domain}/${attachment.r2Path}`,
     //   attachment.filename,
     // );
   };
@@ -138,7 +156,7 @@ export default function EmailDetail({
         if (matchingAttachment) {
           img.setAttribute(
             "src",
-            `${siteConfig.emailR2Domain}/${matchingAttachment.r2Path}`,
+            `${emailR2Domain}/${matchingAttachment.r2Path}`,
           );
         }
       });
@@ -149,7 +167,7 @@ export default function EmailDetail({
         const regex = new RegExp(`\\b${attachment.filename}\\b`, "g");
         processedContent = processedContent.replace(
           regex,
-          `${siteConfig.emailR2Domain}/${attachment.r2Path}`,
+          `${emailR2Domain}/${attachment.r2Path}`,
         );
       });
     }
@@ -241,12 +259,12 @@ export default function EmailDetail({
                     <div className="flex items-center gap-2 overflow-hidden">
                       {attachment.mimeType.startsWith("image/") ? (
                         <BlurImg
-                          src={`${siteConfig.emailR2Domain}/${attachment.r2Path}`}
+                          src={`${emailR2Domain}/${attachment.r2Path}`}
                           alt={attachment.filename}
                           className="h-10 w-10 cursor-pointer rounded object-cover"
                           onClick={() =>
                             setPreviewImage(
-                              `${siteConfig.emailR2Domain}/${attachment.r2Path}`,
+                              `${emailR2Domain}/${attachment.r2Path}`,
                             )
                           }
                         />
