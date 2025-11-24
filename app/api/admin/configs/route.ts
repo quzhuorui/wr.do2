@@ -61,8 +61,15 @@ export async function POST(req: NextRequest) {
       return Response.json("key and value is required", { status: 400 });
     }
 
-    // Use setSystemConfig for upsert operation (create if not exists, update if exists)
-    await setSystemConfig(key, value, type);
+    // Check if config exists, if yes update, if no create
+    const existingConfig = await getMultipleConfigs([key]);
+    if (key in existingConfig && existingConfig[key] !== null) {
+      // Config exists, update it
+      await updateSystemConfig(key, { value, type });
+    } else {
+      // Config doesn't exist, create it
+      await setSystemConfig(key, value, type);
+    }
     return Response.json("Success", { status: 200 });
   } catch (error) {
     console.error("[Error]", error);
