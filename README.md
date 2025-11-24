@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://wr.do/_static/images/x-preview.png" alt="WR.DO" >
   <h1>WR.DO</h1>
-  <p>一站式域名服务平台，集成短链服务、临时邮箱、子域名管理、文件存储和开放API接口。</p>
+  <p>一站式域名服务平台，集成短链服务、临时邮箱、子域名管理、文件存储和开放API接 口。</p>
   <p>
     <a href="https://wr.do">官方云部署站点</a> · <a href="https://wr.do/docs/developer">部署文档</a> · <a href="https://wr.do/feedback">反馈讨论</a> · <a href="/README-en.md">English</a> | 简体中文
   </p>
@@ -241,4 +241,5 @@ pnpm dev
 ## 开源协议
 
 [MIT](/LICENSE.md)
+
 
