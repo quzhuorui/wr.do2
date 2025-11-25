@@ -163,14 +163,27 @@ export async function setSystemConfig(
 ) {
   const serializedValue = serializeConfigValue(value, type);
 
-  return await prisma.systemConfig.upsert({
+  // Some Postgres setups / Prisma versions may have trouble with upsert
+  // and ON CONFLICT when the underlying constraint is not recognized.
+  // To avoid the "no unique or exclusion constraint matching the ON CONFLICT"
+  // error, implement upsert behavior explicitly by checking existence first.
+  const existing = await prisma.systemConfig.findUnique({
     where: { key },
-    update: {
-      value: serializedValue,
-      type,
-      description,
-    },
-    create: {
+  });
+
+  if (existing) {
+    return await prisma.systemConfig.update({
+      where: { key },
+      data: {
+        value: serializedValue,
+        type,
+        description,
+      },
+    });
+  }
+
+  return await prisma.systemConfig.create({
+    data: {
       key,
       value: serializedValue,
       type,
